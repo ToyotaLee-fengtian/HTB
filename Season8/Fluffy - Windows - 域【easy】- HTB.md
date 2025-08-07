@@ -210,7 +210,11 @@ echo "10.10.11.69 DC01.fluffy.htb fluffy.htb " >>  /etc/hosts
 ## 已知账号密码
 
 HTB给了windows账号密码：**j.fleischman / J0elTHEM4n1990!**
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/99df7e811e5d4362bae9f3b61f49dc34.png)
+
+
 可能的：Windows远程管理（5985/WinRM）以及Windows文件共享（445/SMB）
 
 尝试登录WinRM，无法登录：
@@ -329,13 +333,21 @@ tcon           tdis           tid            utimes         logoff
 把`timeout`改成了12000啊啊啊啊啊啊啊啊终于下载下来了
 
 下载这三个文件，zip包是软件，pdf里面有内容：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/1079afb8a1cb4159985e6c882e565543.png)
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/c65ba562b09a4dfdaf29cbfa35dd2bae.png)
+
+
 是网站漏扫报告最新的几个2025年漏洞
+
+
 
 ## CVE-2025-24996
 
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/85dfac498f694e6f9d7c5d3b90e2d1a6.png)
+
+
 查了下几乎没法利用，网上其他也没什么资料，换下一个
 
 ## CVE-2025-24071
@@ -357,6 +369,8 @@ Windows系统的文件上传☞构造恶意SMB路径的RAR/ZIP压缩文件☞自
 ### POC
 
 先把github的利用脚本clone到kali
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/16445f7790b9426393b60597eea9885b.png)
 
 ```python
@@ -515,7 +529,11 @@ smb: \> ls
 ```
 
 把hash值echo到txt文件里，使用john进行破解：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/caa1d966a72b4cc3baed56aa482c7535.png)
+
+
 获取密码：`prometheusx-303`
 
 ## winrm失败
@@ -591,13 +609,29 @@ INFO: Compressing output into 20250716103550_bloodhound.zip
 
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/d0e20a5041dd4f6c9805e4a4ecf79397.jpeg)
 
+
+
 GPO：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/331f62ddca954205896adf82050023db.png)
+
+
 出站控制，Group Delegated Object Control：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/5074585e3946492a801b7e35bfdea4c0.png)
+
+
 Transitive Object Control，可ACL：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/22c59da7a8c7439d885b924ae972f192.png)
+
+
 组成员，First Degree Group Memberships：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/669e01980c4e474ba271cdd89efd878e.png)
 
 AI强大的地方来了：
@@ -1254,8 +1288,14 @@ r\Documents>
 ```
 
 查看自己是不是域控
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/f4acb8820d234b0180d679c5a87bddbb.png)
+
+
 终于啊啊啊啊啊啊啊啊啊啊啊啊啊
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/e412748f84d740e29d367ed4c11ab11f.png)
 
 # WP

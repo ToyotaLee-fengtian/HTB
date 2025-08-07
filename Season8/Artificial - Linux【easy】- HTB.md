@@ -44,7 +44,11 @@ Nmap done: 1 IP address (1 host up) scanned in 63.62 seconds
 
 只有两个端口开放，22和80
 用浏览器打开ip，发现网址：http://artificial.htb/
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/1077050bc81b474590b10cc723fa8699.png)
+
+
 如果上述方法行不通可以考虑使用nmap继续探测发现域名：
 
 ```bash
@@ -160,7 +164,12 @@ Task Completed
 
 现在去网站看看可以注册登录
 
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/f40f0411b7de4f9bb8a3614aae1141a1.png)
+
+
+
 这儿有个文件上传的地方，下载requirements.txt和Dockerfile，打开文件：
 
 ```bash
@@ -333,7 +342,11 @@ Successfully copied 11.8kB to /home/kali/Downloads/tfimage/tf.h5
 ```
 
 上传到网页，点击在线预览：
+
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/071d0308db454949bdd6790fc00e3b3f.png)
+
 监听反弹：
 
 ```bash
@@ -2313,7 +2326,11 @@ Regexes to search for API keys aren't activated, use param '-r'
 ### backrest_backup.tar.gz
 
 这里有一个备份文件：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/b37573dd6e994fb8b5175337f84d5065.png)
+
+
 文件传到本地以后进行解压：
 
 ```bash
@@ -2407,6 +2424,8 @@ ssl隧道，5000需要私钥失败，9898有密码可以，是个备份网站，
 ```
 
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/c163cf826071438db36697a83f47c8ae.png)
+
+
 得私钥后，把私钥粘贴到本地：
 
 ```bash

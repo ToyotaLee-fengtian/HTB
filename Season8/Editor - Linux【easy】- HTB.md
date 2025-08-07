@@ -29,6 +29,7 @@ Nmap done: 1 IP address (1 host up) scanned in 404.50 seconds
 把IP和域名写入`/etc/hosts`
 
 发现俩网站，一个编辑器的看起来高大上，另一个8080：
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/1267788e6e69437983c7aa75cabe0810.png)
 
 ## CVE-2025-24893
@@ -297,6 +298,8 @@ hydra -L user.txt -P passwd.txt ssh://10.10.11.80 -s 22 -t 4 -vV -f
 
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/2cc0b8da7f21454f9b04fce1984f6ce5.png)
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/4e74b2f4d2834469951ad0be094d8bb4.png)
+
+
 拿到user的flag
 
 ## 权限提升：CVE-2024-32019
@@ -313,8 +316,14 @@ oliver netdata
 ```
 
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/a02b740a74db46158c6d13b9ef4d5897.png)
+
+
 SUID 权限配置错误或路径注入漏洞，允许普通用户通过 ndsudo 执行任意命令（如反向 Shell）获取 root 权限。
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/46b347b0f10546048a8956b7cad9b69d.png)
+
+
 
 [Privilege Escalation via ndsudo (Netdata Local Exploit) - github](https://github.com/AzureADTrent/CVE-2024-32019-POC)
 
@@ -390,9 +399,17 @@ int main(void){
 ```
 
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/ddceb4af0c2f4fd79faf5d5e31d60f7c.png)
+
+
 把文件传上去：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/b60ce6bb6ee847ab8ed2f48a35d924cf.png)
+
+
 把nvme1改为nvme
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/2c3482f82f034978bf70571f9cd2c7a1.png)
 
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/e96464b5eeba4b09badb49219f5cea36.png)

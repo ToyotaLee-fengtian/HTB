@@ -30,6 +30,8 @@ echo '10.10.11.77 mail.outbound.htb' >> /etc/hosts
 ```
 
 访问进入页面：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/a3ad11b62f064b81acee97f3b060562f.png)
 
 ## Roundcube Webmail
@@ -47,11 +49,7 @@ echo '10.10.11.77 mail.outbound.htb' >> /etc/hosts
 ## Roundcube Webmail upload.php _from 反序列化代码执行漏洞（CVE-2025-49113）
 
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/99ca41d9d7f9475988ecc4a4e1f17681.png)
-既然如此直接开搜完事”CVE-2025-49113 exploit“：
-[exploit-github](https://github.com/hakaioffsec/CVE-2025-49113-exploit)
-[漏洞介绍-csdn](https://blog.csdn.net/2301_79460640/article/details/148809624)
-[非常详细的审计分析](https://www.ctfiot.com/254408.html)
-[漏洞分析 英文 需要梯子](https://fearsoff.org/research/roundcube)
+
 
 这个漏洞需要用户登录，折回去看了一眼才发现给了账号密码：
 
@@ -59,7 +57,11 @@ echo '10.10.11.77 mail.outbound.htb' >> /etc/hosts
 >  account `tyler` / `LhKL1o9Nm3X2`
 
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/4c8899097d164e1ca23398b54d151a26.png)
+
+
 把前面的exploit.git克隆下来，用法说明很清晰操作很便捷：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/0ce992b706134685857c663a23c888b8.png)
 
 ## 反向连接
@@ -124,14 +126,30 @@ exploit反向连接：
 ```
 
 监听返回，连接成功：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/5ddae971b8214a56ba87e0a2eb03be6e.png)
-列出隐藏文件发现这是个docker环境，所以ssh连接不太可行：![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/c9fa82236c164b9bb616793b7501b707.png)
+
+
+列出隐藏文件发现这是个docker环境，所以ssh连接不太可行：
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/c9fa82236c164b9bb616793b7501b707.png)
+
+
 
 在这里我们知道tyler的邮箱账号密码，试验后发现也可以连接：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/80d12c353b1e4475ac5e22a51bc4ba93.png)
 
+
+
 列出所有用户：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/b40cf252fa034e8183f3e7f51f05629f.png)
+
+
 端口信息：
 
 ```bash
@@ -154,7 +172,11 @@ tcp   LISTEN 0      100            [::1]:25           [::]:*
 ## MYSQL数据库
 
 发现开放了3306，那就去`var/www/html/`目录下面找：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/4163aee35ad248f083f783bffb1bfe51.png)
+
+
 去roundcube里在config目录下发现：
 
 ```bash
@@ -266,17 +288,41 @@ sess_id changed ip      vars
 ```
 
 解码：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/db5893a3e81841ceb04b5cec1a47548d.png)
+
+
 在bin目录下发现解码脚本：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/35e464c2d41d4d0fa1139bac2cab8472.png)
+
+
 密码来了：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/632496e77a1d43789defdeb537f28b89.png)
+
+
 登录jacob用户：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/75e1633c228544e8be4f6118d667f02c.png)
+
+
 `/var/mail/`下cat
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/0a652b25f01d4802a0e417d3d90fa47b.png)
+
+
 这里也可直接图形界面登录：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/46d012c1bf3446888c3ea06860af01c8.png)
+
+
 那么接下来SSH直接登：
 
 ```bash
@@ -284,7 +330,11 @@ ssh jacob@10.10.11.77
 ```
 
 成功登录：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/36e0695c6e364e9bb0060e07ab2250a9.png)
+
+
 哈哈还能看到前一个HTBer的IP号数和登录时间
 ls就是flag
 
@@ -323,7 +373,11 @@ jacob可以以 `root` 权限无密码运行 `/usr/bin/below` 命令，但有以�
 
 [概述与公开poc](https://cve.imfht.com/detail/CVE-2025-27591)
 [利用思路](https://cn-sec.com/archives/3888390.html)
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/75c4e5f4c54846158bcd9d5346d5a595.png)
+
+
 `error_root.log`是可写状态：
 
 ```bash
@@ -362,8 +416,14 @@ echo 'abc::0:0:abc:/root:/bin/bash' >> /etc/passwd
 ```
 
 su了
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/f76b24b385e8418b9f9732026a3610f0.png)
+
+
 终于
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/edd17a9c82234cdca6b24f21eb0e8d72.png)
 
 # WP

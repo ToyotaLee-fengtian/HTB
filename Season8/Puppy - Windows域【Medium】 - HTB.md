@@ -273,12 +273,18 @@ password_properties: 0x00000001
    ```bash
    rpcclient > querygroupmember 0x44d # 0x44d 是 DnsAdmins 的 RID
    ```
+
 2. **`steph.cooper_adm` 账户**:
+   
    * 如果 `steph.cooper_adm` 账户是 `DnsAdmins` 成员，尝试获取 `steph.cooper_adm` 的凭证（暴力破解或 AS-REPRoasting，如果允许预认证）。
    * 如果能登录 `steph.cooper_adm`，可以利用 DnsAdmins 的权限进行提权。
+
 3. **AS-REPRoasting**: 尝试对 `enumdomusers` 列表中的所有用户执行 AS-REPRoasting 攻击（使用 `GetNPUsers.py` 等工具），特别是那些不太可能强制预认证的账户。
+
 4. **Kerberoasting**: 尝试对域中注册的服务主体名称 (SPN) 进行 Kerberoasting 攻击，以获取服务账户的 TGS-REP 票据，然后离线破解服务账户的密码。
+
 5. **密码猜测/暴力破解**: 结合密码策略，对枚举到的用户（尤其是 `steph.cooper_adm` 和 `Administrator`）进行密码猜测或暴力破解。可以使用常见的密码列表和针对性的组合。
+
 6. **Responder/NBNS/LLMNR Poisoning**: 如果你在内网中，可以尝试用 Responder 捕获域用户尝试访问共享时的哈希。
 
 ## SMB
@@ -326,18 +332,44 @@ INFO: Compressing output into 20250804141139_bloodhound.zip
 ```
 
 先找我们所在：
+
+
 `Sibling Objects in the Same OU`：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/0eab9151f45343028f29b93d2481de49.png)
+
+
 `Effective Inbound GPOs`：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/2a2c794be5a54558be5362361e46fbde.png)
+
+
 `First Degree Group Memberships`：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/d75fa4197c3540d4af965105edad2d5f.png)
+
+
 `Unrolled Group Membership`：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/fbda2b270d52497fa551740bfffebfd0.png)
+
+
 入站控制：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/f0f364fbca3744b6bb599af9ccedceba.png)
+
+
 出站控制：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/af629ff5f6ff4267a9a4e860c5fe9e15.png)
+
+
 有凭据的用户所在组对developers组有写入权限，所以我们可以将自己写入那个组：
 
 ```bash
@@ -365,13 +397,27 @@ smb: \> ls
                 5080575 blocks of size 4096. 1614433 blocks available
 ```
 
+
+
 kdbx是KeePass软件的数据库文件格式，我们get下来
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/13da92a80ccb4a7fbfe79f7855776043.png)
+
+
 发现需要密码，爆破试试，自带的约翰不行
+
+
 下载工具：
 [keepass4brute](https://github.com/r3nt0n/keepass4brute)
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/f67c6999139c4af8b4c81169869b926b.png)
+
+
 然后看样子要一周才能全部跑完，哈哈，那既然如此，我们不用傻傻等待，既然是靶机偷看一下答案：`liverpool`，成功进入：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/a3de32119b0c413d9d79bbc0312827c8.png)
 
 ## 密码喷撒
@@ -421,7 +467,11 @@ SMB         10.10.11.70     445    DC               [+] PUPPY.HTB\ant.edwards:An
 ```
 
 成功了一个账户，而这个用户刚好是高价值用户，我们在攻击路径的高价值图中可以看到它：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/85e2e737b5e543bc9ce93e1138cab83f.png)
+
+
 edwards所在的组完全控制silver，可修改一下密码`passwd123!`：
 
 ```bash
@@ -616,7 +666,11 @@ distinguishedName: CN=Adam D. Silver,CN=Users,DC=PUPPY,DC=HTB
 userAccountControl: NORMAL_ACCOUNT; DONT_EXPIRE_PASSWORD
 ```
 
+
+
 区别：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/7fac87a9dff74c769a26ad4e24d754ac.png)
 
 ## winrm
@@ -630,9 +684,17 @@ evil-winrm -i 10.10.11.70 -u 'ADAM.SILVER' -p 'passwd123!'
 ## 权限提升
 
 翻到根目录下有一个备份目录：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/a54c168fac8147cf80b635d2930ec76d.png)
+
+
 进去看看，下载下来：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/33dab19e4e3e4c13901025a1b509e8fd.png)
+
+
 解压查看，发现用户密码`steph.cooper`/`ChefSteph2025!`：
 
 ```bash
@@ -663,15 +725,33 @@ evil-winrm -i 10.10.11.70 -u 'ADAM.SILVER' -p 'passwd123!'
 </ldap-config>
 ```
 
+
+
 这也是我们的高价值用户之一，属于远程管理组：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/b123dc4f95404fab9eb563bdfa564b4a.png)
+
+
 直接winrm登录成功，但是这个机子也不是域控，之前是有个名称和此用户一样的adm账户。
+
+
 我们用winpeas扫一下
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/7e42a04dd7ee4021b761a3f8baa5103a.png)
+
+
 先使用smb上传到steph.cooper里：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/1f88ccc834e140b68b159ce3ba73ac51.png)
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/ce85ec90ffb942f7a7754127275baa7e.png)
+
+
 发现DPAPI的主密钥和加密凭证：
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/cc69148ce21e45e7bd01535ec37d559b.png)
 
 ```bash
@@ -718,6 +798,8 @@ evil-winrm -i 10.10.11.70 -u 'ADAM.SILVER' -p 'passwd123!'
 ---
 
 核心条件中，用户 SID和用户密码明文已经有了，文件下载出来
+
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/e5bbdcfb49cc47fc8c3915b48e81c018.png)
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/b104a3cfabc14ccf81752b7330d7835f.png)
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/09892ea9090e4ca39edee3f9a5d2e7b4.png)
@@ -739,7 +821,9 @@ Decrypted key: 0xd9a570722fbaf7149f9f9d691b0e137b7413c1414c452f9c77d6d8a8ed9efe3
   ```plaintext
   89a23bcd12ef4567890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f6789
   ```
+
 - **凭据文件（`credential`）**: 位于 Windows 系统中的以下路径之一：
+  
   - Credential Manager: `%APPDATA%\Microsoft\Credentials\`
   - 浏览器凭据（如 Chrome）: `%LOCALAPPDATA%\Google\Chrome\User Data\Default\Login Data`
   - 其他应用: 需根据具体应用定位文件。
